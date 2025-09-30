@@ -1,0 +1,21 @@
+body{
+    display: flex;
+    justify-content: center;
+}
+.abc{
+    display: flex;
+    justify-content: center;
+}
+.form{
+    padding: 10px;
+    margin-top: 50px;
+    width: 400px;
+}
+
+.login{
+    background-color: white;
+    border: none;
+    font-size: small;
+    color: blue;
+    font: inherit;
+}
