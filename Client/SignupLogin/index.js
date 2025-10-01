@@ -53,7 +53,8 @@ function showLogin() {
     const span=document.getElementById("message2");
     span.innerHTML="";
     axios.post(`${UserUrl}/login`,userDetails).then((response)=>{
-      alert(response.data.message);
+      window.location.href = "../expense/expense.html";
+
     }).catch((error)=>{
       if(error.response.status=="404" || error.response.status=="401")
       {
