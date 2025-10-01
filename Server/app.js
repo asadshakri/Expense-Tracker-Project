@@ -6,6 +6,7 @@ const mysql=require('mysql2');
 const db=require("./utils/db-connection");
 const usersRouter=require("./routes/usersRouter");
 const expenseRoute=require('./routes/expenseRouter');
+require("./models");
 
 app.use(cors());
 app.use(express.json());

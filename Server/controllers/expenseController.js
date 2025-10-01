@@ -1,7 +1,12 @@
 const Expense = require("../models/expense_details");
+
 const fetchexpenses= async(req,res)=>{
     try{
-        const expenses=await Expense.findAll();
+        const expenses=await Expense.findAll({
+            where:{
+                userId:req.user.id
+            }
+        });
         res.status(200).json(expenses);
     }
     catch(error){
@@ -16,7 +21,8 @@ const addexpense= async(req,res)=>{
         const expenses=await Expense.create({
             expenseAmount:expenseamount,
             description:description,
-            category:category
+            category:category,
+            UserId:req.user.id
         })
         res.status(201).json(expenses);
     }
@@ -30,7 +36,10 @@ const deleteexpense=async(req,res)=>{
     try{
         const {id}=req.params;
         const expenses=await Expense.destroy({
-            where:{id:id}
+            where:{
+                id:id,
+                userId:req.user.id
+            }
         });
         res.status(200).json({message:'Expense deleted successfully'});
     }

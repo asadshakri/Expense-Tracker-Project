@@ -3,7 +3,8 @@ var apiUrl="http://localhost:7000/expense";
 document.addEventListener("DOMContentLoaded", initialize);
 
 function initialize() {
-    axios.get(`${apiUrl}/fetch`)
+    const token=localStorage.getItem("token");
+    axios.get(`${apiUrl}/fetch`,{ headers:{ "Authorization": token } })
     .then(response => {
         const expenselist = response.data;
     for(let i=0;i<expenselist.length;i++){
@@ -28,8 +29,8 @@ function handleSubmit(event){
 }
 
 function add(expenseDetails){
-
-    axios.post(`${apiUrl}/add`, expenseDetails)
+    const token=localStorage.getItem("token");
+    axios.post(`${apiUrl}/add`, expenseDetails,{headers:{ "Authorization": token }})
     .then(response => {
         display(response.data);
     })
@@ -72,7 +73,8 @@ function editData(data,listitem){
 
 function deleteData(id,listItem){
     const ul=document.querySelector("ul");
-    axios.delete(`${apiUrl}/delete/${id}`)
+    const token=localStorage.getItem("token");
+    axios.delete(`${apiUrl}/delete/${id}`,{ headers:{ "Authorization": token } })
     .then(response => {
         console.log(response.data);
         ul.removeChild(listItem);

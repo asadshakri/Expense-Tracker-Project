@@ -53,6 +53,8 @@ function showLogin() {
     const span=document.getElementById("message2");
     span.innerHTML="";
     axios.post(`${UserUrl}/login`,userDetails).then((response)=>{
+      alert(response.data.message);
+      localStorage.setItem("token",response.data.token);
       window.location.href = "../expense/expense.html";
 
     }).catch((error)=>{

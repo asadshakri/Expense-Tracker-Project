@@ -1,6 +1,7 @@
 
 const users=require("../models/users_details")
 const bcrypt=require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const addUsers= async(req,res)=>{
     try{
@@ -35,6 +36,11 @@ const addUsers= async(req,res)=>{
 
 };
 
+
+function generateToken(id)
+{
+    return jwt.sign({userId:id},"HjglGzkVREwlWX+VFGITENyPO1pAE0pEwYmWScmvg1A=");
+}
 const loginUser=async(req,res)=>{
     try{
         const {email,password}=req.body;
@@ -54,7 +60,7 @@ const loginUser=async(req,res)=>{
                 throw new Error("Something went wrong")
             }
             if(result==true){
-               res.status(200).json({message:"User login successful"});
+               res.status(200).json({message:"User login successful",token:generateToken(checkEmailExist.id)});
                return;
             }
             else
