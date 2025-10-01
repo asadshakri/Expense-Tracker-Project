@@ -19,3 +19,8 @@ body{
     color: blue;
     font: inherit;
 }
+
+img {
+    max-width: 100%;   /* don’t exceed the container width */
+    height: auto;      /* keep aspect ratio */
+  }
