@@ -32,6 +32,4 @@ const Users = sequelize.define(
   }
 );
 
-module.exports = {
-  Users
-};
+module.exports=Users;

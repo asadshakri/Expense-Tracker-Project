@@ -15,7 +15,7 @@
   <body>
     <div class="container abc">
       <!-- Signup Form -->
-      <form id="signupForm" class="form-control form">
+      <form id="signupForm" class="form-control form" onsubmit="addUser(event)">
         <h3 class="text-center">Sign up</h3>
         <p class="text-center" style="font-style: oblique">
           Sign up to continue
@@ -47,6 +47,8 @@
           required
         />
         <br />
+        <span id="message1" style="display: flex; justify-content: center; font-size: small">
+        </span>
         <div class="d-grid gap-2 col-6 mx-auto">
           <button class="btn btn-primary" id="signup" type="submit">
             Sign up
@@ -62,7 +64,7 @@
       </form>
 
       <!-- Login Form -->
-      <form id="loginForm" class="form-control form" style="display: none">
+      <form id="loginForm" class="form-control form" style="display: none" onsubmit="loginUser(event)">
         <h3 class="text-center">Log in</h3>
         <p class="text-center" style="font-style: oblique">Welcome back</p>
         <input
@@ -83,6 +85,8 @@
           required
         />
         <br />
+        <span id="message2" style="display: flex; justify-content: center; font-size: small">
+        </span>
         <div class="d-grid gap-2 col-6 mx-auto">
           <button class="btn btn-success" id="login" type="submit">
             Log In
