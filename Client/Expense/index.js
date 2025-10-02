@@ -82,3 +82,5 @@ function deleteData(id,listItem){
     })
     .catch(err => console.error(err));
 }
+
+

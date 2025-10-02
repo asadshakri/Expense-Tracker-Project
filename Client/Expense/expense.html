@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+    <div class="d-flex justify-content-end" >
+        <button type="button" id="premium" class="btn btn-danger mt-3" style="margin-right: 10px;">Buy Premium Membership</button>
+    </div>
    <div class="container abc">
     <form onsubmit="handleSubmit(event)" class="form-control form">
         <label for="expenseamount" class="form-label">ExpenseAmount</label>
@@ -30,10 +33,9 @@
         <button type="submit" class="btn btn-danger mt-3" id="btn">Add Expense</button>
         </div>
     </form>
-   </div>
-   <div>
     <ul></ul>
    </div>
+    
     
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
