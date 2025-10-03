@@ -174,7 +174,7 @@ function showLeaderboard(){
           <td style="padding: 8px; border: 1px solid #ddd;">${index + 1}</td>
           <td style="padding: 8px; border: 1px solid #ddd;">${user.id}</td>
           <td style="padding: 8px; border: 1px solid #ddd;">${user.name}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">₹${user.total_cost}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">₹${user.totalExpense}</td>
         `;
         tbody.appendChild(tr);
       });

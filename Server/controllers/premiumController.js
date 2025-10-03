@@ -4,7 +4,7 @@ const sequelize=require("../utils/db-connection");
 
 const getLeaderboard=async(req,res)=>{
     try {
-        const leaderboard = await User.findAll({
+       /* const leaderboard = await User.findAll({
           attributes: [
             "id",
             "name",
@@ -26,7 +26,15 @@ const getLeaderboard=async(req,res)=>{
           ],
           group: ["users.id"],
           order: [[sequelize.literal("total_cost"), "DESC"]]
-        });
+        });*/
+
+        const leaderboard=await User.findAll({
+            attributes: [
+                "id",
+                "name",
+                "totalExpense"
+            ]
+        })
     
         res.status(200).json(leaderboard);
       } 
