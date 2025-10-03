@@ -37,7 +37,7 @@
               <button class="btn btn-dark  w-100 text-start" onclick="showExpense()">Expense Details</button>
             </li>
             <li class="nav-item mb-2">
-              <button class="btn btn-dark  w-100 text-start">Leaderboard</button>
+              <button id="leaderButton" class="btn btn-dark  w-100 text-start" onclick="showLeaderboard()" disabled>Leaderboard</button>
             </li>
             <br><br>
             <li class="nav-item mb-2">
@@ -78,6 +78,9 @@
        <ul id="ul">
 
        </ul>
+   </div>
+   <div class="abc" id="showLeaderboard">
+    <div id="ul_leader"></div>
    </div>
     </div>
 

@@ -7,6 +7,7 @@ const db=require("./utils/db-connection");
 const usersRouter=require("./routes/usersRouter");
 const expenseRoute=require('./routes/expenseRouter');
 const paymentRoute=require("./routes/paymentRouter")
+const premiumRouter=require("./routes/premiumRouter");
 require("./models");
 
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(express.static('public'));
 app.use("/user",usersRouter)
 app.use('/expense',expenseRoute)
 app.use('/',paymentRoute)
+app.use('/premium',premiumRouter);
 db.sync({force:false}).then(()=>{
     console.log('Database synced successfully.');
     app.listen(port,()=>{

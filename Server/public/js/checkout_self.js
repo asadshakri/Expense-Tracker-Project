@@ -13,6 +13,7 @@ document.getElementById("renderBtn").addEventListener("click", async() => {
         redirectTarget: "_self",
     };
     await cashfree.checkout(checkoutOptions);
+    localStorage.removeItem("token");
 }
 catch(err)
 {

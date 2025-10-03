@@ -12,6 +12,9 @@ function initialize() {
             premiumStatus.style.display="block";
             const premium=document.getElementById("premium");
             premium.disabled= true;
+            const leaderButton=document.getElementById("leaderButton")
+            leaderButton.disabled=false;
+
         }
      }).catch(err=>console.log(err));
     
@@ -113,6 +116,8 @@ function addExpense(){
     expenseForm.style.display="block";
     const expense=document.getElementById("showExpense");
     expense.style.display="none";
+    const Leaderboard=document.getElementById("showLeaderboard");
+    expense.style.display="none";
 }
 
 
@@ -128,4 +133,64 @@ function showExpense(){
     expenseForm.style.display="none";
     const expense=document.getElementById("showExpense");
     expense.style.display="block";
+    const Leaderboard=document.getElementById("showLeaderboard");
+    Leaderboard.style.display="none";
+}
+
+function showLeaderboard(){
+    const ul=document.getElementById("ul_leader");
+    axios.get("http://localhost:7000/premium/getLeaderboard")
+    .then((response) => {
+      const leaderboardData = response.data;
+
+      // Get container
+      const container = document.getElementById("ul_leader");
+      container.innerHTML = ""; // clear old content
+
+      // Create table
+      const table = document.createElement("table");
+      table.style.borderCollapse = "collapse";
+      table.style.width = "100%";
+      table.style.textAlign = "left";
+
+      // Create table header
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr style="background-color: #f2f2f2;">
+          <th style="padding: 8px; border: 1px solid #ddd;">Rank</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">ID</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">Name</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">Total Expense</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      // Create table body
+      const tbody = document.createElement("tbody");
+
+      leaderboardData.forEach((user, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="padding: 8px; border: 1px solid #ddd;">${index + 1}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">${user.id}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">${user.name}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">₹${user.total_cost}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      container.appendChild(table);
+    })
+    .catch((err) => {
+      console.error("Error loading leaderboard:", err);
+    });
+
+    const expenseForm=document.getElementById("expenseForm");
+    expenseForm.style.display="none";
+    const expense=document.getElementById("showExpense");
+    expense.style.display="none";
+    const Leaderboard=document.getElementById("showLeaderboard");
+    Leaderboard.style.display="block";
+
 }
