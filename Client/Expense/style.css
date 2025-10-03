@@ -1,6 +1,6 @@
 .abc{
-    display: flex;
-    justify-content: center;
+    display: none;
+    margin-left: 20%;
     margin-top: 20px;
 }
 .form{

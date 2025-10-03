@@ -8,16 +8,50 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <div class="d-flex justify-content-end" >
-        <button type="button" id="premium" class="btn btn-danger mt-3" style="margin-right: 10px;">Buy Premium Membership</button>
+    <div style="display: flex;">
+  
+    <div class="d-inline-flex">
+        <!-- Sidebar -->
+        <nav class="navbar navbar-dark bg-dark align-items-start flex-column p-3" style="min-height: 100vh; width: 250px;">
+          <a class="navbar-brand fw-bold mb-4 fs-4 text-white" href="#">💰 Expense Tracker</a>
+          <div class="mb-3">
+            <h3 class="text-white mb-1">Welcome!</h3>
+            <p id="premiumStatus" style="display: none; color: aliceblue; font-size: small;font-style: oblique;">You are our premium member</p>
+            <button 
+              type="button" 
+              onclick="buyPremium()" 
+              id="premium" 
+              class="btn btn-danger btn-sm w-100 mt-3">
+              ⭐ Buy Premium Membership
+            </button>
+          </div>
+       
+          <ul class="nav nav-pills flex-column w-100">
+            <li class="nav-item mb-2">
+                <button class="btn btn-dark  w-100 text-start" onclick="home()">Home</button>
+              </li>
+            <li class="nav-item mb-2">
+              <button class="btn btn-dark  w-100 text-start" onclick="addExpense()">Add Expense</button>
+            </li>
+            <li class="nav-item mb-2">
+              <button class="btn btn-dark  w-100 text-start" onclick="showExpense()">Expense Details</button>
+            </li>
+            <li class="nav-item mb-2">
+              <button class="btn btn-dark  w-100 text-start">Leaderboard</button>
+            </li>
+            <br><br>
+            <li class="nav-item mb-2">
+                <button class="btn btn-dark  w-100 text-start" onclick="logout()">Log Out</button>
+              </li>
+            
+          </ul>
+        </nav>
     </div>
-   <div class="container abc">
+ 
+   <div class="container abc" id="expenseForm" >
     <form onsubmit="handleSubmit(event)" class="form-control form">
         <label for="expenseamount" class="form-label">ExpenseAmount</label>
         <input type="number" class="form-control" id="expenseamount" name="expenseamount" required>
-        <br>
-        <label for="description" class="form-label">Description</label>
-        <input type="text" class="form-control" id="description" name="description" required>
         <br>
         <label for="category" class="form-label">Category</label>
         <select class="form-select" id="category" name="category" required>
@@ -29,12 +63,24 @@
             <option value="Healthcare">Healthcare</option>
         </select>
         <br>
+        <label for="description" class="form-label">Description</label>
+        <textarea type="text" rows="5" cols="20" class="form-control" id="description" name="description" required></textarea>
+        <br>
+      
+        
         <div class="d-grid gap-2 col-6 mx-auto">
         <button type="submit" class="btn btn-danger mt-3" id="btn">Add Expense</button>
         </div>
     </form>
-    <ul></ul>
    </div>
+
+   <div class="abc" id="showExpense">
+       <ul id="ul">
+
+       </ul>
+   </div>
+    </div>
+
     
     
 </body>

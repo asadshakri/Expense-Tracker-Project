@@ -22,7 +22,7 @@ function showLogin() {
     const password=event.target.passwd.value;
     const span=document.getElementById("message1");
     span.innerHTML="";
-    const userDetails={name,email,password};
+    const userDetails={name,email,password,premiumMember:false};
     
     axios.post(`${UserUrl}/add`,userDetails).then((response)=>{
          

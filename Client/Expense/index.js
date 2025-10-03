@@ -1,9 +1,20 @@
-var apiUrl="http://localhost:7000/expense";
-
+const apiUrl="http://localhost:7000/expense";
+const paymentUrl="http://localhost:7000/paymentPage";
 document.addEventListener("DOMContentLoaded", initialize);
 
 function initialize() {
     const token=localStorage.getItem("token");
+     axios.get("http://localhost:7000/user/premiumMember",{ headers:{ "Authorization": token } })
+     .then((response)=>{
+        if(response.data.premiumMember===true)
+        {
+           const premiumStatus=document.getElementById("premiumStatus");
+            premiumStatus.style.display="block";
+            const premium=document.getElementById("premium");
+            premium.disabled= true;
+        }
+     }).catch(err=>console.log(err));
+    
     axios.get(`${apiUrl}/fetch`,{ headers:{ "Authorization": token } })
     .then(response => {
         const expenselist = response.data;
@@ -11,7 +22,7 @@ function initialize() {
         display(expenselist[i]);
     }
 })
-    .catch(err => console.error(err));
+    .catch(err => console.log(err));
 }
 
 function handleSubmit(event){
@@ -37,7 +48,7 @@ function add(expenseDetails){
     .catch(err => console.error(err));
 }
 function display(data){
-    const ul =document.querySelector("ul");
+    const ul =document.getElementById("ul");
     const li=document.createElement("li");
     li.textContent = `${data.expenseAmount}   ${data.description}   ${data.category}`;
     ul.appendChild(li);
@@ -72,7 +83,7 @@ function editData(data,listitem){
 }
 
 function deleteData(id,listItem){
-    const ul=document.querySelector("ul");
+    const ul=document.getElementById("ul");
     const token=localStorage.getItem("token");
     axios.delete(`${apiUrl}/delete/${id}`,{ headers:{ "Authorization": token } })
     .then(response => {
@@ -84,3 +95,37 @@ function deleteData(id,listItem){
 }
 
 
+function buyPremium() {
+    const token = localStorage.getItem("token");
+    const popup = window.open("http://localhost:7000/paymentPage", "payment");
+  
+    // Listen for "ready" signal from payment page
+    window.addEventListener("message", (event) => {
+      if (event.origin === "http://localhost:7000" && event.data === "READY") {
+        // Now payment page is ready, send token
+        popup.postMessage({ token }, "http://localhost:7000");
+      }
+    });
+  }
+
+function addExpense(){
+    const expenseForm=document.getElementById("expenseForm");
+    expenseForm.style.display="block";
+    const expense=document.getElementById("showExpense");
+    expense.style.display="none";
+}
+
+
+function logout()
+{
+    localStorage.removeItem("token");
+    window.location.href="../SignupLogin/main.html"
+}
+
+
+function showExpense(){
+    const expenseForm=document.getElementById("expenseForm");
+    expenseForm.style.display="none";
+    const expense=document.getElementById("showExpense");
+    expense.style.display="block";
+}

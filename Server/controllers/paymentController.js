@@ -2,10 +2,12 @@ const { createOrder } = require("../services/cashfreeService");
 const payment = require("../models/payment");
 const path = require("path");
 const {cashfree} = require("../services/cashfreeService");
-
+const user=require("../models/users_details")
 exports.getPaymentPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/index.html"));
 };
+
+
 
 exports.processPayment = async (req, res) => {
   const orderId = "ORDER-" + Date.now();
@@ -29,9 +31,10 @@ exports.processPayment = async (req, res) => {
       orderAmount,
       orderCurrency,
       paymentStatus: "pending",
+      userId: req.user.id
     });
 
-    res.status(200).json({ paymentSessionId, orderId });
+    res.status(200).json({ paymentSessionId, orderId});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -72,9 +75,27 @@ exports.getPaymentStatus = async (req,res) => {
     }
    }
      )
+    const payment_details= await payment.findOne({
+      where:{
+        orderId:orderId
+      }
+     })
+     
+     if(orderStatus=="Success")
+     {
+     await user.update({
+           premiumMember: true
+     },{
+     where:{
+      id:payment_details.userId
+     }
+    }
+    )
+  }
     res.status(200).json({orderStatus,orderId});
   } 
-  
+ 
+
   catch (error) {
     console.log("Error:", error.response.data.message);
     res.status(500).json({message:err.message});

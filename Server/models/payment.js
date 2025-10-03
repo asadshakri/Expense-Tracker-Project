@@ -21,6 +21,9 @@ const payment = sequelize.define("payment", {
   paymentStatus: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  userId:{
+    type: DataTypes.INTEGER
   }
 });
 

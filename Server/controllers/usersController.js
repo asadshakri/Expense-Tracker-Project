@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const addUsers= async(req,res)=>{
     try{
-    const {name,email,password}=req.body;
+    const {name,email,password,premiumMember}=req.body;
     const checkEmailExist=await users.findOne({
         where:{
             email:email
@@ -22,7 +22,7 @@ const addUsers= async(req,res)=>{
         if(err)
         console.log(err);
 
-        await users.create({name,email,password:hash});
+        await users.create({name,email,password:hash,premiumMember});
         console.log("User successfully added");
         res.status(201).json({message:"user added successfully"});
     })
@@ -77,7 +77,25 @@ const loginUser=async(req,res)=>{
     }
 }
 
+
+const isPremiumMember= async(req,res)=>{
+try{
+    const users_details= await users.findOne({
+        where:{
+            id:req.user.id
+        }    
+    })
+
+    res.status(200).json({premiumMember: users_details.premiumMember})
+}
+catch(err)
+{
+    res.status(500).json({message:err.message});
+}
+}
+
 module.exports={
     addUsers,
-    loginUser
+    loginUser,
+    isPremiumMember
 }

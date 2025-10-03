@@ -7,7 +7,7 @@ const db=require("./utils/db-connection");
 const usersRouter=require("./routes/usersRouter");
 const expenseRoute=require('./routes/expenseRouter');
 const paymentRoute=require("./routes/paymentRouter")
-//require("./models");
+require("./models");
 
 app.use(cors());
 app.use(express.json());
