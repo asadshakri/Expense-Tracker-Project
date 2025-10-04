@@ -1,0 +1,25 @@
+body {
+    background-color: #f3f4f6;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    padding: 25px;
+  }
+
+  .btn-primary {
+    background-color: #2563eb;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+  }

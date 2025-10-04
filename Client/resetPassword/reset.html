@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style> 
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-body">
+      <h3 class="text-center mb-3">Forgot Password</h3>
+      <p class="text-center text-muted mb-4">Enter your email address and we'll send you a link to reset your password.</p>
+
+      <form id="forgotForm" onsubmit="resetLink(event)">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="Enter your email" 
+            required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
+      </form>
+
+      <div class="text-center mt-3">
+        <a href="../SignupLogin/main.html" class="text-decoration-none">Back to Login</a>
+      </div>
+    </div>
+  </div>
+  <script src="index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

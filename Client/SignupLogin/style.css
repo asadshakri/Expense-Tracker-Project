@@ -1,11 +1,18 @@
 body{
     display: flex;
     justify-content: center;
+    background-color: #f3f4f6;
+    
 }
 .abc{
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 50px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding-bottom: 50px;
+    background-color: white;
 }
 .form{
     padding: 10px;

@@ -66,3 +66,7 @@ function showLogin() {
     })
     event.target.reset();
   }
+
+  function forgotPassword(){
+    window.location.href="../resetPassword/reset.html"
+  }

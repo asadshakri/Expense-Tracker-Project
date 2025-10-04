@@ -9,6 +9,7 @@ const expenseRoute=require('./routes/expenseRouter');
 const paymentRoute=require("./routes/paymentRouter")
 const premiumRouter=require("./routes/premiumRouter");
 const geminiRouter=require("./routes/geminiRouter");
+const passwordRouter=require("./routes/passwordRouter");
 require("./models");
 
 app.use(cors());
@@ -18,6 +19,7 @@ app.use("/user",usersRouter)
 app.use('/expense',expenseRoute)
 app.use('/',paymentRoute)
 app.use('/premium',premiumRouter);
+app.use("/password",passwordRouter);
 
 app.use('/gemini',geminiRouter);
 db.sync({force:false}).then(()=>{
