@@ -117,7 +117,7 @@ function addExpense(){
     const expense=document.getElementById("showExpense");
     expense.style.display="none";
     const Leaderboard=document.getElementById("showLeaderboard");
-    expense.style.display="none";
+    Leaderboard.style.display="none";
 }
 
 

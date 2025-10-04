@@ -2,7 +2,8 @@ const { createOrder } = require("../services/cashfreeService");
 const payment = require("../models/payment");
 const path = require("path");
 const {cashfree} = require("../services/cashfreeService");
-const user=require("../models/users_details")
+const user=require("../models/users_details");
+const sequelize = require("../utils/db-connection");
 exports.getPaymentPage = async (req, res) => {
   res.sendFile(path.join(__dirname, "../views/index.html"));
 };
@@ -41,6 +42,7 @@ exports.processPayment = async (req, res) => {
 };
 
 exports.getPaymentStatus = async (req,res) => {
+  const transaction=await sequelize.transaction();
   try {
     const orderId=req.params.orderId;
     const response = await cashfree.PGOrderFetchPayments(orderId);
@@ -72,13 +74,14 @@ exports.getPaymentStatus = async (req,res) => {
    {
     where:{
         orderId:orderId
-    }
+    },
+    transaction
    }
      )
     const payment_details= await payment.findOne({
       where:{
         orderId:orderId
-      }
+      },transaction
      })
      
      if(orderStatus=="Success")
@@ -88,16 +91,19 @@ exports.getPaymentStatus = async (req,res) => {
      },{
      where:{
       id:payment_details.userId
-     }
+     },
+     transaction
     }
     )
   }
+    await transaction.commit();
     res.status(200).json({orderStatus,orderId});
   } 
  
 
   catch (error) {
     console.log("Error:", error.response.data.message);
+     await transaction.rollback();
     res.status(500).json({message:err.message});
   }
 };
