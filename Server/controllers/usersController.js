@@ -2,6 +2,7 @@
 const users=require("../models/users_details")
 const bcrypt=require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const addUsers= async(req,res)=>{
     try{
@@ -39,7 +40,7 @@ const addUsers= async(req,res)=>{
 
 function generateToken(id)
 {
-    return jwt.sign({userId:id},"HjglGzkVREwlWX+VFGITENyPO1pAE0pEwYmWScmvg1A=");
+    return jwt.sign({userId:id},process.env.TOKEN);
 }
 const loginUser=async(req,res)=>{
     try{

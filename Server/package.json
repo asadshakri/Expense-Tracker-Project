@@ -11,9 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.5",
+    "@google/genai": "^1.22.0",
     "bcrypt": "^6.0.0",
     "cashfree-pg": "^5.0.8",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.15.0",

@@ -8,6 +8,7 @@ const usersRouter=require("./routes/usersRouter");
 const expenseRoute=require('./routes/expenseRouter');
 const paymentRoute=require("./routes/paymentRouter")
 const premiumRouter=require("./routes/premiumRouter");
+const geminiRouter=require("./routes/geminiRouter");
 require("./models");
 
 app.use(cors());
@@ -17,6 +18,8 @@ app.use("/user",usersRouter)
 app.use('/expense',expenseRoute)
 app.use('/',paymentRoute)
 app.use('/premium',premiumRouter);
+
+app.use('/gemini',geminiRouter);
 db.sync({force:false}).then(()=>{
     console.log('Database synced successfully.');
     app.listen(port,()=>{

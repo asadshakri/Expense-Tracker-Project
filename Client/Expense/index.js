@@ -194,3 +194,25 @@ function showLeaderboard(){
     Leaderboard.style.display="block";
 
 }
+
+
+const descriptionid = document.getElementById("description");
+let typingTimer;
+
+descriptionid.addEventListener("input", () => {
+  clearTimeout(typingTimer);
+
+  typingTimer = setTimeout(() => {
+    const description = descriptionid.value.trim();
+    if (!description) return;
+
+    axios.post("http://localhost:7000/gemini/suggestCategory", { description })
+      .then(response => {
+        const category = document.getElementById("category");
+        console.log(response.data.category)
+        category.value = response.data.category;
+        console.log(category.value);
+      })
+      .catch(err => console.error(err));
+  }, 1000);
+});
