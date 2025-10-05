@@ -27,13 +27,13 @@ const addexpense= async(req,res)=>{
             category:category,
             UserId:req.user.id
         },
-            {transaction}
+            {transaction:transaction}
         )
         await User.increment(
             { totalExpense: expenseamount },
             {
               where: { id: req.user.id },
-              transaction,
+              transaction:transaction,
             }
           );
          await transaction.commit(); 
@@ -53,7 +53,7 @@ const deleteexpense=async(req,res)=>{
         const expenseToDelete = await Expense.findOne({
             where: { id, UserId: req.user.id },
             attributes: ["expenseAmount"],
-            transaction
+            transaction:transaction
           });
      const expenseAmount = expenseToDelete.expenseAmount;
      if (!expenseToDelete) {
@@ -66,13 +66,13 @@ const deleteexpense=async(req,res)=>{
                 id:id,
                 userId:req.user.id
             },
-            transaction
+            transaction:transaction
         });
 
         await User.increment(
             { totalExpense: -expenseAmount }, 
             { where: { id: req.user.id },
-        transaction }
+        transaction:transaction }
           );
          await transaction.commit();
         res.status(200).json({message:'Expense deleted successfully'});

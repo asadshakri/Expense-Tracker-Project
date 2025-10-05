@@ -42,7 +42,7 @@ exports.processPayment = async (req, res) => {
 };
 
 exports.getPaymentStatus = async (req,res) => {
-  const transaction=await sequelize.transaction();
+  const t=await sequelize.transaction();
   try {
     const orderId=req.params.orderId;
     const response = await cashfree.PGOrderFetchPayments(orderId);
@@ -75,13 +75,13 @@ exports.getPaymentStatus = async (req,res) => {
     where:{
         orderId:orderId
     },
-    transaction
+    transaction:t
    }
      )
     const payment_details= await payment.findOne({
       where:{
         orderId:orderId
-      },transaction
+      },transaction:t
      })
      
      if(orderStatus=="Success")
@@ -92,18 +92,18 @@ exports.getPaymentStatus = async (req,res) => {
      where:{
       id:payment_details.userId
      },
-     transaction
+     transaction:t
     }
     )
   }
-    await transaction.commit();
+    await t.commit();
     res.status(200).json({orderStatus,orderId});
   } 
  
 
   catch (error) {
     console.log("Error:", error.response.data.message);
-     await transaction.rollback();
-    res.status(500).json({message:err.message});
+     await t.rollback();
+    res.status(500).json({message:error.message});
   }
 };

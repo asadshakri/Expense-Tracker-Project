@@ -6,10 +6,11 @@ function resetLink(event)
     const email=event.target.email.value;
     axios.post("http://localhost:7000/password/forgotPassword",{email})
     .then((response)=>{
-        console.log("password changed");
-    }).catch(err=>console.log("error"));
-
-
-
+        alert(response.data.message);
+        console.log("reset Link send");
+    }).catch((err)=>{
+        if(err.response)
+        alert(err.response.data.message)
+        console.log("error")});
 
 }

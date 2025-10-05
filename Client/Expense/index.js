@@ -124,6 +124,7 @@ function addExpense(){
 function logout()
 {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     window.location.href="../SignupLogin/main.html"
 }
 

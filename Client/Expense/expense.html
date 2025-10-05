@@ -53,6 +53,9 @@
         <label for="expenseamount" class="form-label">ExpenseAmount</label>
         <input type="number" class="form-control" id="expenseamount" name="expenseamount" required>
         <br>
+        <label for="description" class="form-label">Description</label>
+        <textarea type="text" rows="5" cols="20" class="form-control" id="description" name="description" required></textarea>
+        <br>
         <label for="category" class="form-label">Category</label>
         <select class="form-select" id="category" name="category" required>
             <option value="Choose" disabled selected>Select a category</option>
@@ -64,10 +67,6 @@
             <option value="others">others</option>
         </select>
         <br>
-        <label for="description" class="form-label">Description</label>
-        <textarea type="text" rows="5" cols="20" class="form-control" id="description" name="description" required></textarea>
-        <br>
-      
         
         <div class="d-grid gap-2 col-6 mx-auto">
         <button type="submit" class="btn btn-danger mt-3" id="btn">Add Expense</button>

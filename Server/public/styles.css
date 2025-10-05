@@ -1,0 +1,45 @@
+body {
+    background-color: #abb0be;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .checkout-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .checkout-box h2 {
+    margin-bottom: 15px;
+    color: #1e3a8a;
+    font-weight: 600;
+  }
+
+  .checkout-box p {
+    color: #555;
+    margin-bottom: 25px;
+  }
+
+  #renderBtn {
+    background: #b3bd28;
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 100%;
+    font-weight: 500;
+  }
+
+  .footer-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6b7280;
+  }

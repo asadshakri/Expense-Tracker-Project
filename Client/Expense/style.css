@@ -1,12 +1,19 @@
+body{
+    background-color: #f3f4f6;
+}
 .abc{
     display: none;
     margin-left: 20%;
     margin-top: 20px;
+   
 }
 .form{
     padding: 30px;
     margin-top: 30px;
     width: 400px;
-    background-color: rgb(70, 122, 70);
+    background-color: rgb(43, 45, 46);
     color: aliceblue;
+    border: none;
+    border-radius: 12px;
+    
 }

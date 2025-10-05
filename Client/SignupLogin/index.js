@@ -55,6 +55,7 @@ function showLogin() {
     axios.post(`${UserUrl}/login`,userDetails).then((response)=>{
       alert(response.data.message);
       localStorage.setItem("token",response.data.token);
+      localStorage.setItem("email",email);
       window.location.href = "../expense/expense.html";
 
     }).catch((error)=>{
@@ -70,3 +71,10 @@ function showLogin() {
   function forgotPassword(){
     window.location.href="../resetPassword/reset.html"
   }
+
+
+  window.addEventListener("DOMContentLoaded",()=>{
+    if(localStorage.getItem("token"))
+      window.location.href = "../expense/expense.html";
+
+  })
