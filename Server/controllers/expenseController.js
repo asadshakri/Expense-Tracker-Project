@@ -2,13 +2,24 @@ const Expense = require("../models/expense_details");
 const User=require("../models/users_details");
 const sequelize = require("../utils/db-connection");
 const fetchexpenses= async(req,res)=>{
-    try{
-        const expenses=await Expense.findAll({
-            where:{
-                userId:req.user.id
-            }
-        });
-        res.status(200).json(expenses);
+
+  let page = parseInt(req.query.page)
+  let limit = parseInt(req.query.limit)
+  let offset = (page - 1) * limit;
+  try {
+    const { count, rows } = await Expense.findAndCountAll({
+      where: { UserId:req.user.id },
+      order: [["createdAt", "DESC"]],
+      limit: limit,
+      offset: offset,
+    });
+
+    res.status(200).json({
+      expenses: rows,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      totalExpenses: count,
+    });
     }
     catch(error){
         console.error('Error fetching expenses:',error);

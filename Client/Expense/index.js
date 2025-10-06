@@ -19,15 +19,7 @@ function initialize() {
         }
      }).catch(err=>console.log(err));
     
-    axios.get(`${apiUrl}/fetch`,{ headers:{ "Authorization": token } })
-    .then(response => {
-        allExpenses=response.data
-        const expenselist = response.data;
-    for(let i=0;i<expenselist.length;i++){
-        display(expenselist[i]);
-    }
-})
-    .catch(err => console.log(err));
+
 }
 
 function handleSubmit(event){
@@ -49,8 +41,8 @@ function add(expenseDetails){
     const token=localStorage.getItem("token");
     axios.post(`${apiUrl}/add`, expenseDetails,{headers:{ "Authorization": token }})
     .then(response => {
-        allExpenses.push(response.data)
-        display(response.data);
+      //  allExpenses.push(response.data)
+       // display(response.data);
     })
     .catch(err => console.error(err));
 }
@@ -81,6 +73,8 @@ function display(data) {
   tr.lastElementChild.appendChild(deleteBtn);
 
   tbody.appendChild(tr);
+
+
 }
 
 function deleteData(id, row) {
@@ -125,8 +119,24 @@ function logout()
     window.location.href="../SignupLogin/main.html"
 }
 
+let limit=2;
+function showExpense(page=1){
+  allExpenses = [];
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  const token=localStorage.getItem("token");
+  axios.get(`${apiUrl}/fetch?page=${page}&limit=${limit}`,{ headers:{ "Authorization": token } })
+  .then(response => {
+      allExpenses=response.data.expenses
+      const expenselist = response.data.expenses;
+  for(let i=0;i<expenselist.length;i++){
+      display(expenselist[i]);
+  }
 
-function showExpense(){
+
+})
+  .catch(err => console.log(err));
+    
     const expenseForm=document.getElementById("expenseForm");
     expenseForm.style.display="none";
     const expense=document.getElementById("showExpense");
