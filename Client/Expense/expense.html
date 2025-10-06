@@ -31,7 +31,7 @@
                 <button class="btn btn-dark  w-100 text-start" onclick="home()">Home</button>
               </li>
             <li class="nav-item mb-2">
-              <button class="btn btn-dark  w-100 text-start" onclick="addExpense()">Add Expense</button>
+              <button class="btn btn-dark  w-100 text-start" onclick="addExpense()">Add Income/Expense</button>
             </li>
             <li class="nav-item mb-2">
               <button class="btn btn-dark  w-100 text-start" onclick="showExpense()">Expense Details</button>
@@ -50,34 +50,45 @@
  
    <div class="container abc" id="expenseForm" >
     <form onsubmit="handleSubmit(event)" class="form-control form">
+      <label for="income" class="form-label">Income</label>
+      <input type="number" class="form-control" id="income" name="income" >
+      <br>
         <label for="expenseamount" class="form-label">ExpenseAmount</label>
-        <input type="number" class="form-control" id="expenseamount" name="expenseamount" required>
+        <input type="number" class="form-control" id="expenseamount" name="expenseamount">
         <br>
         <label for="description" class="form-label">Description</label>
         <textarea type="text" rows="5" cols="20" class="form-control" id="description" name="description" required></textarea>
         <br>
         <label for="category" class="form-label">Category</label>
-        <select class="form-select" id="category" name="category" required>
-            <option value="Choose" disabled selected>Select a category</option>
-            <option value="food">food</option>
-            <option value="transport">transport</option>
-            <option value="entertainment">entertainment</option>
-            <option value="utilities">utilities</option>
-            <option value="healthcare">healthcare</option>
-            <option value="others">others</option>
-        </select>
+        <input type="text" class="form-control" id="category" name="category" placeholder="eg-Food">
         <br>
         
-        <div class="d-grid gap-2 col-6 mx-auto">
-        <button type="submit" class="btn btn-danger mt-3" id="btn">Add Expense</button>
+        <div class="d-grid gap-2 col-10 mx-auto">
+        <button type="submit" class="btn btn-danger mt-3" id="btn">Add Income/Expense</button>
         </div>
     </form>
    </div>
 
    <div class="abc" id="showExpense">
-       <ul id="ul">
-
-       </ul>
+    <h2 style="font-family: sans-serif">Premium Expenses & Income Dashboard</h2>
+    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;">
+    <button type="button" class="btn btn-success" id="daily">Daily</button>
+    <button type="button" class="btn btn-success" id="weekly">Weekly</button>
+    <button type="button" class="btn btn-success" id="monthly">Monthly</button>
+    </div>
+    <table id="expenseTable" class="table table-striped table-bordered table-hover text-center align-middle mt-3">
+      <thead >
+        <tr>
+          <th class="bg-dark text-white">Date</th>
+          <th class="bg-dark text-white">Income</th>
+          <th class="bg-dark text-white">Expense Amount</th>
+          <th class="bg-dark text-white">Description</th>
+          <th class="bg-dark text-white">Category</th>
+          <th class="bg-dark text-white">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
    </div>
    <div class="abc" id="showLeaderboard">
     <div id="ul_leader"></div>

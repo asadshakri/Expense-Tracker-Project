@@ -2,6 +2,7 @@ const apiUrl="http://localhost:7000/expense";
 const paymentUrl="http://localhost:7000/paymentPage";
 document.addEventListener("DOMContentLoaded", initialize);
 
+let allExpenses = [];
 function initialize() {
     const token=localStorage.getItem("token");
      axios.get("http://localhost:7000/user/premiumMember",{ headers:{ "Authorization": token } })
@@ -20,6 +21,7 @@ function initialize() {
     
     axios.get(`${apiUrl}/fetch`,{ headers:{ "Authorization": token } })
     .then(response => {
+        allExpenses=response.data
         const expenselist = response.data;
     for(let i=0;i<expenselist.length;i++){
         display(expenselist[i]);
@@ -33,11 +35,12 @@ function handleSubmit(event){
     const expenseamount=event.target.expenseamount.value;
     const description=event.target.description.value;
     const category=event.target.category.value;
+    const income=event.target.income.value;
 
-    const expenseDetails={expenseamount,description,category};
+    const expenseDetails={expenseamount,description,category,income};
     add(expenseDetails);
     const btn=document.getElementById("btn");
-    btn.textContent="Add Expense";
+    btn.textContent="Add Income/Expense";
     event.target.reset();
 
 }
@@ -46,55 +49,49 @@ function add(expenseDetails){
     const token=localStorage.getItem("token");
     axios.post(`${apiUrl}/add`, expenseDetails,{headers:{ "Authorization": token }})
     .then(response => {
+        allExpenses.push(response.data)
         display(response.data);
     })
     .catch(err => console.error(err));
 }
-function display(data){
-    const ul =document.getElementById("ul");
-    const li=document.createElement("li");
-    li.textContent = `${data.expenseAmount}   ${data.description}   ${data.category}`;
-    ul.appendChild(li);
+function display(data) {
+  const tbody = document.getElementById("tableBody");
+  const tr = document.createElement("tr");
 
-    const deletebtn=document.createElement("button");
-    deletebtn.textContent = "Delete";
-    deletebtn.addEventListener("click", () => deleteData(data.id, li));
-    deletebtn.style.marginLeft = "100px";
-    deletebtn.style.margin="10px";
-    const editbtn=document.createElement("button");
-    editbtn.textContent = "Edit";
-    editbtn.addEventListener("click", () => editData(data,li));
-    editbtn.style.marginLeft = "10px";
-    editbtn.style.margin="10px";
+  // Format date (you can adjust format as needed)
+  const date = new Date(data.createdAt || Date.now()).toLocaleDateString();
 
-    li.appendChild(deletebtn);
-    li.appendChild(editbtn);
+  tr.innerHTML = `
+    <td>${date}</td>
+    <td>${data.income}</td>
+    <td>${data.expenseAmount}</td>
+    <td>${data.description}</td>
+    <td>${data.category}</td>
+    <td></td>
+  `;
+
+  // Create Delete button
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.style.margin = "5px";
+  deleteBtn.classList.add("btn", "btn-danger");
+  deleteBtn.addEventListener("click", () => deleteData(data.id, tr));
+
+  // Append delete button in last column
+  tr.lastElementChild.appendChild(deleteBtn);
+
+  tbody.appendChild(tr);
 }
 
-function editData(data,listitem){
-
-    const expenseamount=document.getElementById("expenseamount");
-    const description=document.getElementById("description");
-    const category=document.getElementById("category");
-    expenseamount.value=data.expenseAmount;
-    description.value=data.description;
-    category.value=data.category;
-    const btn=document.getElementById("btn");
-    btn.textContent="Edit Expense";
-    //const updatedexpenseDetails={expenseamount,description,category};
-    deleteData(data.id,listitem);
-}
-
-function deleteData(id,listItem){
-    const ul=document.getElementById("ul");
-    const token=localStorage.getItem("token");
-    axios.delete(`${apiUrl}/delete/${id}`,{ headers:{ "Authorization": token } })
-    .then(response => {
-        console.log(response.data);
-        ul.removeChild(listItem);
-
+function deleteData(id, row) {
+  const token = localStorage.getItem("token");
+  axios
+    .delete(`${apiUrl}/delete/${id}`, { headers: { Authorization: token } })
+    .then((response) => {
+      console.log(response.data);
+      row.remove();
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 
@@ -217,3 +214,44 @@ descriptionid.addEventListener("input", () => {
       .catch(err => console.error(err));
   }, 1000);
 });
+
+
+document.getElementById("daily").addEventListener("click", () => filterData("daily"));
+document.getElementById("weekly").addEventListener("click", () => filterData("weekly"));
+document.getElementById("monthly").addEventListener("click", () => filterData("monthly"));
+
+function filterData(type) {
+  const now = new Date();
+  let filtered = [];
+
+  if (type === "daily") {
+    filtered = allExpenses.filter((e) => {
+      const d = new Date(e.createdAt);
+      return (
+        d.getDate() === now.getDate() &&
+        d.getMonth() === now.getMonth() &&
+        d.getFullYear() === now.getFullYear()
+      );
+    });
+  } else if (type === "weekly") {
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+
+    filtered = allExpenses.filter((e) => {
+      const d = new Date(e.createdAt);
+      return d >= startOfWeek && d < endOfWeek;
+    });
+  } else if (type === "monthly") {
+    filtered = allExpenses.filter((e) => {
+      const d = new Date(e.createdAt);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+  }
+
+  //Clear and re-render filtered table
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  filtered.forEach((expense) => display(expense));
+}

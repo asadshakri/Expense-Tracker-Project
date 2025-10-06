@@ -14,8 +14,7 @@ const suggestCategory=async(req,res) =>{
     try{
   const result = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: `Suggest what category ${description} fall under in one word. Just give me text from ["food","utilities
-    ","transport","entertainment","healthcare","others"]` ,
+    contents: `Suggest what category ${description} fall under in one word. Just give me text` ,
   });
   const categoryText = result.text;
   //console.log(response.text);

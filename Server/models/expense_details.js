@@ -8,9 +8,13 @@ const Expense=sequelize.define('expense',{
         primaryKey:true,
         allowNull:false
     },
+    income:{
+        type:DataTypes.INTEGER,
+        defaultValue:0
+    },
      expenseAmount:{
         type:DataTypes.INTEGER,
-        allowNull:false
+        defaultValue: 0
     },
     description:{
         type:DataTypes.STRING,

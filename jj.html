@@ -1,41 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Sidebar</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f5f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .filters button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      transition: 0.2s;
+    }
+    .filters button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    table th {
+      background-color: #007bff;
+      color: #fff;
+    }
+    #downloadBtn {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+    #downloadBtn:disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
 <body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <nav class="navbar navbar-dark bg-dark flex-column p-3" style="min-height: 100vh; width: 250px;">
-          <a class="navbar-brand fw-bold mb-4 fs-4 text-white" href="#">💰 Expense Tracker</a>
-      
-          <ul class="nav nav-pills flex-column w-100">
-            <li class="nav-item mb-2">
-                <button class="btn btn-dark  w-100 text-start">Home</button>
-              </li>
-            <li class="nav-item mb-2">
-              <button class="btn btn-dark  w-100 text-start">Add Expense</button>
-            </li>
-            <li class="nav-item mb-2">
-              <button class="btn btn-dark  w-100 text-start">Expense Details</button>
-            </li>
-            <li class="nav-item mb-2">
-              <button class="btn btn-dark  w-100 text-start">Leaderboard</button>
-            </li>
-            <br><br>
-            <li class="nav-item mb-2">
-                <button class="btn btn-dark  w-100 text-start">Log Out</button>
-              </li>
-            
-          </ul>
-        </nav>
-     
+  <div class="container">
+    <h2>Premium Expenses & Income Dashboard</h2>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="filters">
+      <button id="dailyBtn">Daily</button>
+      <button id="weeklyBtn">Weekly</button>
+      <button id="monthlyBtn">Monthly</button>
+    </div>
+
+    <table id="transactionsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Transactions will appear here -->
+      </tbody>
+    </table>
+
+    <button id="downloadBtn">Download Transactions</button>
+  </div>
+
+  <script>
+    // Example data
+    const transactions = [
+      { date: '2025-10-01', type: 'Expense', category: 'Food', amount: 20 },
+      { date: '2025-10-01', type: 'Income', category: 'Salary', amount: 2000 },
+      { date: '2025-10-02', type: 'Expense', category: 'Transport', amount: 15 },
+      { date: '2025-10-05', type: 'Expense', category: 'Shopping', amount: 50 },
+      { date: '2025-10-06', type: 'Income', category: 'Freelance', amount: 500 }
+    ];
+
+    // Premium flag
+    const isPremium = true; // change to false to test non-premium behavior
+    const tableBody = document.querySelector("#transactionsTable tbody");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    if (!isPremium) downloadBtn.disabled = true;
+
+    // Display transactions in table
+    function displayTransactions(data) {
+      tableBody.innerHTML = "";
+      data.forEach(tx => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${tx.date}</td>
+          <td>${tx.type}</td>
+          <td>${tx.category}</td>
+          <td>${tx.amount}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    displayTransactions(transactions);
+
+    // Filter functions
+    function filterDaily() {
+      const today = new Date().toISOString().split('T')[0];
+      displayTransactions(transactions.filter(tx => tx.date === today));
+    }
+
+    function filterWeekly() {
+      const now = new Date();
+      const weekStart = new Date(now.setDate(now.getDate() - now.getDay()));
+      displayTransactions(transactions.filter(tx => new Date(tx.date) >= weekStart));
+    }
+
+    function filterMonthly() {
+      const now = new Date();
+      displayTransactions(transactions.filter(tx => new Date(tx.date).getMonth() === now.getMonth()));
+    }
+
+    document.getElementById("dailyBtn").addEventListener("click", filterDaily);
+    document.getElementById("weeklyBtn").addEventListener("click", filterWeekly);
+    document.getElementById("monthlyBtn").addEventListener("click", filterMonthly);
+
+    // Download CSV
+    downloadBtn.addEventListener("click", () => {
+      if (!isPremium) return;
+
+      const csvContent = "data:text/csv;charset=utf-8,"
+        + ["Date,Type,Category,Amount"]
+          .concat(transactions.map(tx => `${tx.date},${tx.type},${tx.category},${tx.amount}`))
+          .join("\n");
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "transactions.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  </script>
 </body>
 </html>

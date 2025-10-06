@@ -20,8 +20,9 @@ const addexpense= async(req,res)=>{
 
     const transaction= await sequelize.transaction();
     try{
-        const {expenseamount,description,category}=req.body;
+        const {income,expenseamount,description,category}=req.body;
         const expenses=await Expense.create({
+            income:income,
             expenseAmount:expenseamount,
             description:description,
             category:category,
@@ -30,7 +31,9 @@ const addexpense= async(req,res)=>{
             {transaction:transaction}
         )
         await User.increment(
-            { totalExpense: expenseamount },
+            { totalExpense: expenseamount,
+                totalIncome: income
+             },
             {
               where: { id: req.user.id },
               transaction:transaction,
@@ -52,10 +55,11 @@ const deleteexpense=async(req,res)=>{
         const {id}=req.params;
         const expenseToDelete = await Expense.findOne({
             where: { id, UserId: req.user.id },
-            attributes: ["expenseAmount"],
+            attributes: ["expenseAmount","income"],
             transaction:transaction
           });
      const expenseAmount = expenseToDelete.expenseAmount;
+     const income = expenseToDelete.income;
      if (!expenseToDelete) {
         await transaction.rollback();
         return res.status(404).json({ message: "Expense not found" });
@@ -70,7 +74,9 @@ const deleteexpense=async(req,res)=>{
         });
 
         await User.increment(
-            { totalExpense: -expenseAmount }, 
+            { totalExpense: -expenseAmount,
+                totalIncome:-income
+             }, 
             { where: { id: req.user.id },
         transaction:transaction }
           );
