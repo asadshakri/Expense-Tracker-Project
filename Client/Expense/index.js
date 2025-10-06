@@ -1,9 +1,11 @@
 const apiUrl="http://localhost:7000/expense";
 const paymentUrl="http://localhost:7000/paymentPage";
 document.addEventListener("DOMContentLoaded", initialize);
-
+let limit;
+let page;
 let allExpenses = [];
 function initialize() {
+   
     const token=localStorage.getItem("token");
      axios.get("http://localhost:7000/user/premiumMember",{ headers:{ "Authorization": token } })
      .then((response)=>{
@@ -84,6 +86,17 @@ function deleteData(id, row) {
     .then((response) => {
       console.log(response.data);
       row.remove();
+      const tbody = document.getElementById("tableBody");
+      const tbodyLength = tbody.getElementsByTagName("tr").length;
+      if(tbodyLength===0)
+      {
+        page=localStorage.getItem("currentPage")-1;
+        localStorage.setItem("currentPage",page);
+        showExpense();
+      }
+      
+
+
     })
     .catch((err) => console.error(err));
 }
@@ -116,12 +129,18 @@ function logout()
 {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
+    localStorage.removeItem("limit");
+    localStorage.removeItem("currentPage");
     window.location.href="../SignupLogin/main.html"
 }
 
-let limit=2;
-function showExpense(page=1){
+function showExpense(page=localStorage.getItem("currentPage")||1){
   allExpenses = [];
+  if(page==0)
+    page=1;
+  const rowsPerPage=document.getElementById("rowsPerPage");
+  rowsPerPage.value=localStorage.getItem("limit")||1
+  limit=localStorage.getItem("limit")||1;
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
   const token=localStorage.getItem("token");
@@ -131,6 +150,8 @@ function showExpense(page=1){
       const expenselist = response.data.expenses;
   for(let i=0;i<expenselist.length;i++){
       display(expenselist[i]);
+
+      renderPagination(response.data.currentPage, response.data.totalPages);
   }
 
 
@@ -143,6 +164,49 @@ function showExpense(page=1){
     expense.style.display="block";
     const Leaderboard=document.getElementById("showLeaderboard");
     Leaderboard.style.display="none";
+}
+
+
+
+function renderPagination(currentPage, totalPages) {
+
+
+  const container = document.getElementById("pagination");
+  container.innerHTML = ""; 
+
+
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "« Prev";
+  prevBtn.className = "btn btn-outline-dark btn-sm";
+  prevBtn.disabled = currentPage === 1;
+  prevBtn.onclick = () => {showExpense(currentPage - 1); localStorage.setItem("currentPage",currentPage - 1)}
+  container.appendChild(prevBtn);
+
+  // 1 2 3
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `btn btn-sm ${
+      i === currentPage ? "btn-dark" : "btn-outline-dark"
+    }`;
+    btn.onclick = () => {showExpense(i); localStorage.setItem("currentPage",i)}
+    container.appendChild(btn);
+  }
+
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next »";
+  nextBtn.className = "btn btn-outline-dark btn-sm";
+  nextBtn.disabled = currentPage === totalPages;
+  nextBtn.onclick = () => {showExpense(currentPage + 1); localStorage.setItem("currentPage",currentPage + 1)}
+  container.appendChild(nextBtn);
+}
+
+
+function changeRowsPerPage(value) {
+  limit = parseInt(value);
+  localStorage.setItem("limit",limit)
+  localStorage.setItem("currentPage",1)
+  showExpense(1); // Reload first page with new limit
 }
 
 function showLeaderboard(){
