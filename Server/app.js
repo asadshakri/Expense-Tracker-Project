@@ -10,16 +10,25 @@ const paymentRoute=require("./routes/paymentRouter")
 const premiumRouter=require("./routes/premiumRouter");
 const geminiRouter=require("./routes/geminiRouter");
 const passwordRouter=require("./routes/passwordRouter");
-require("./models");
+const reportsRouter=require("./routes/reportRouter");
+require("./models/expense_details");
+require("./models/ForgotPasswordRequests");
+require("./models/payment");
+require("./models/relation");
+require("./models/users_details");
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.use(express.static("reports"));
+app.use("/reports", express.static("reports"));
 app.use("/user",usersRouter)
 app.use('/expense',expenseRoute)
 app.use('/',paymentRoute)
 app.use('/premium',premiumRouter);
 app.use("/password",passwordRouter);
+
+app.use('/reports',reportsRouter);
 
 app.use('/gemini',geminiRouter);
 db.sync({force:false}).then(()=>{

@@ -1,0 +1,105 @@
+const Expense = require("../models/expense_details");
+const User=require("../models/users_details");
+const sequelize = require("../utils/db-connection");
+
+
+const fs = require("fs");
+const path = require("path");
+
+// Generate report (daily, weekly, monthly)
+const reportGenerate = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    //  Get all user expenses
+    const allExpenses = await Expense.findAll({
+      where: { userId },
+      attributes: ["id", "income", "expenseAmount", "description", "category", "createdAt"],
+      order: [["createdAt", "ASC"]],
+    });
+
+    if (!allExpenses.length) {
+      return res.status(404).json({ message: "No expenses found for this user." });
+    }
+
+    // Helpers
+    const now = new Date();
+    const filterByRange = (expenses, start, end) =>
+      expenses.filter((e) => {
+        const d = new Date(e.createdAt);
+        return d >= start && d < end;
+      });
+
+    // Daily (today)
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(startOfDay.getDate() + 1);
+    const dailyExpenses = filterByRange(allExpenses, startOfDay, endOfDay);
+
+    //Weekly (Sunday → Saturday)
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    const weeklyExpenses = filterByRange(allExpenses, startOfWeek, endOfWeek);
+
+    // Monthly (1st → next month 1st)
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const monthlyExpenses = filterByRange(allExpenses, startOfMonth, endOfMonth);
+
+    // Build CSV
+    let csvData = "";
+
+    const writeSection = (title, data) => {
+      csvData += `=== ${title} ===\n`;
+      csvData += "Date,Description,Category,Amount\n";
+      if (data.length === 0) {
+        csvData += "No records found\n\n";
+        return;
+      }
+      data.forEach((e) => {
+        const dateStr = new Date(e.createdAt).toISOString().split("T")[0];
+        csvData += `${dateStr},"${e.description}","${e.category}",${e.expenseAmount},${e.income}\n`;
+      });
+      csvData += "\n\n";
+    };
+
+    writeSection("DAILY EXPENSES", dailyExpenses);
+    writeSection("WEEKLY EXPENSES", weeklyExpenses);
+    writeSection("MONTHLY EXPENSES", monthlyExpenses);
+
+    // Save file locally
+    const reportsDir = path.join(__dirname, "../reports");
+    if (!fs.existsSync(reportsDir)) {
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+    
+    const filename = `expense_report_${userId}_${Date.now()}.csv`;
+    const filepath = path.join(reportsDir, filename);
+
+    fs.writeFile(filepath, csvData, "utf8", (err) => {
+      if (err) {
+        console.error("Error writing report:", err);
+      } else {
+        console.log(`Report saved successfully: ${filepath}`);
+      }
+    });
+
+    //  Send download URL
+    const fileUrl = `http://localhost:7000/reports/${filename}`;
+
+    res.status(200).json({
+      message: "Report generated successfully!",
+      downloadUrl: fileUrl,
+    });
+  } catch (err) {
+    console.error("Error generating report:", err);
+    res.status(500).json({ message: "Failed to generate report." });
+  }
+};
+
+module.exports = {
+     reportGenerate 
+};

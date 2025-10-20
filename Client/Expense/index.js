@@ -26,12 +26,18 @@ function initialize() {
 
 function handleSubmit(event){
     event.preventDefault();
-    const expenseamount=event.target.expenseamount.value;
+    let expenseamount=event.target.expenseamount.value;
     const description=event.target.description.value;
-    const category=event.target.category.value;
-    const income=event.target.income.value;
+    let category=event.target.category.value;
+    let income=event.target.income.value ;
+    let note=event.target.note.value ;
 
-    const expenseDetails={expenseamount,description,category,income};
+    if(income=='')
+      income=0;
+    if(expenseamount=='')
+      expenseamount=0;
+
+    const expenseDetails={expenseamount,description,category,income,note};
     add(expenseDetails);
     const btn=document.getElementById("btn");
     btn.textContent="Add Income/Expense";
@@ -329,3 +335,34 @@ function filterData(type) {
   tbody.innerHTML = "";
   filtered.forEach((expense) => display(expense));
 }
+
+
+const reportButton = document.getElementById("report");
+reportButton.addEventListener("click", async(e)=>{
+ e.preventDefault();
+  const token = localStorage.getItem("token");
+
+  try {
+    const res = await axios.get(`http://localhost:7000/reports/generate`, {
+      headers: { Authorization: token },
+    });
+
+    const data = res.data;
+    if (data.downloadUrl) {
+      alert(`report generated successfully!`); 
+      console.log("Redirecting...");
+  window.open(data.downloadUrl, '_blank');
+
+    }
+    else 
+    {
+      alert("Error generating report: " + data.message);
+    }
+  } catch (err) {
+    console.error("Error generating report:", err);
+    alert("Something went wrong while generating the report.");
+  }
+});
+
+
+

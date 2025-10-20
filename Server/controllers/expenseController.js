@@ -31,13 +31,14 @@ const addexpense= async(req,res)=>{
 
     const transaction= await sequelize.transaction();
     try{
-        const {income,expenseamount,description,category}=req.body;
+        const {income,expenseamount,description,category,note}=req.body;
         const expenses=await Expense.create({
             income:income,
             expenseAmount:expenseamount,
             description:description,
             category:category,
-            UserId:req.user.id
+            UserId:req.user.id,
+            note:note
         },
             {transaction:transaction}
         )
