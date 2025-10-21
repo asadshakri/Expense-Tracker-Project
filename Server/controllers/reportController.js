@@ -1,7 +1,7 @@
 const Expense = require("../models/expense_details");
 const User=require("../models/users_details");
 const sequelize = require("../utils/db-connection");
-
+require('dotenv').config();
 
 const fs = require("fs");
 const path = require("path");
@@ -88,7 +88,7 @@ const reportGenerate = async (req, res) => {
     });
 
     //  Send download URL
-    const fileUrl = `http://localhost:7000/reports/${filename}`;
+    const fileUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/reports/${filename}`;
 
     res.status(200).json({
       message: "Report generated successfully!",

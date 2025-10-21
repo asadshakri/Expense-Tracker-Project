@@ -46,7 +46,7 @@ const forgotPassword = async (req, res) => {
       htmlContent: `
       <h3>Password Reset Request</h3>
       <p>Click below to reset your password:</p>
-      <a href="http://localhost:7000/password/resetPassword/${uuid}">
+      <a href="${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/password/resetPassword/${uuid}">
         Reset Password
       </a>`
     });

@@ -1,4 +1,3 @@
-
 document.getElementById("renderBtn").addEventListener("click", async() => {
     const cashfree = Cashfree({
         mode: "sandbox",

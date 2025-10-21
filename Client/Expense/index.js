@@ -216,7 +216,7 @@ function changeRowsPerPage(value) {
 }
 
 function showLeaderboard(){
-    const ul=document.getElementById("ul_leader");
+    
     axios.get("http://localhost:7000/premium/getLeaderboard")
     .then((response) => {
       const leaderboardData = response.data;
@@ -230,15 +230,15 @@ function showLeaderboard(){
       table.style.borderCollapse = "collapse";
       table.style.width = "100%";
       table.style.textAlign = "left";
-
+      table.className="table table-striped table-bordered table-hover text-center align-middle mt-3"
       // Create table header
       const thead = document.createElement("thead");
       thead.innerHTML = `
-        <tr style="background-color: #f2f2f2;">
-          <th style="padding: 8px; border: 1px solid #ddd;">Rank</th>
-          <th style="padding: 8px; border: 1px solid #ddd;">ID</th>
-          <th style="padding: 8px; border: 1px solid #ddd;">Name</th>
-          <th style="padding: 8px; border: 1px solid #ddd;">Total Expense</th>
+        <tr style="background-color: black; color: white;">
+          <th class="bg-dark text-white" style="padding: 8px; border: 1px solid #ddd;">Rank</th>
+          <th class="bg-dark text-white" style="padding: 8px; border: 1px solid #ddd;">Name</th>
+          <th class="bg-dark text-white" style="padding: 8px; border: 1px solid #ddd;">Total Expense</th>
+          <th class="bg-dark text-white" style="padding: 8px; border: 1px solid #ddd;">Total Income</th>
         </tr>
       `;
       table.appendChild(thead);
@@ -250,9 +250,9 @@ function showLeaderboard(){
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td style="padding: 8px; border: 1px solid #ddd;">${index + 1}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">${user.id}</td>
           <td style="padding: 8px; border: 1px solid #ddd;">${user.name}</td>
           <td style="padding: 8px; border: 1px solid #ddd;">₹${user.totalExpense}</td>
+          <td style="padding: 8px; border: 1px solid #ddd;">₹${user.totalIncome}</td>
         `;
         tbody.appendChild(tr);
       });

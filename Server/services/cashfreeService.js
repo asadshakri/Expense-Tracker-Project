@@ -1,6 +1,7 @@
+require("dotenv").config();
 const { Cashfree, CFEnvironment } = require("cashfree-pg"); 
 
-const cashfree = new Cashfree(CFEnvironment.SANDBOX, "TEST430329ae80e0f32e41a393d78b923034", "TESTaf195616268bd6202eeb3bf8dc458956e7192a85");
+const cashfree = new Cashfree(CFEnvironment.SANDBOX, process.env.CASHFREE_API_KEY, process.env.CASHFREE_API_SECRET);
 
 const createOrder= async(
     orderId,
@@ -23,7 +24,7 @@ const request = {
         customer_phone: customerPhone
     },
     order_meta: {
-        "return_url": `http://localhost:7000/payment-status/${orderId}`,
+        "return_url": `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/payment-status/${orderId}`,
       //  payment_methods: "cc,dc,upi"
     },
 

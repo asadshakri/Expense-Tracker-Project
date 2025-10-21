@@ -48,12 +48,15 @@
  
    <div class="container abc" id="expenseForm" >
     <form onsubmit="handleSubmit(event)" class="form-control form">
+      <div style="display: flex; gap: 20px;">
       <label for="income" class="form-label">Income</label>
       <input type="number" class="form-control" id="income" name="income" >
       <br>
         <label for="expenseamount" class="form-label">ExpenseAmount</label>
         <input type="number" class="form-control" id="expenseamount" name="expenseamount" >
         <br>
+      </div>
+      <br>
         <label for="description" class="form-label">Description</label>
         <input type="text" class="form-control" id="description" name="description" required>
         <br>
@@ -71,9 +74,7 @@
    </div>
 
    <div class="abc" id="showExpense">
-    <div style="display: flex; justify-content: flex-end; margin-left: 130%;">
-    <button type="button" class="btn btn-warning" id="report">Report Generate</button>
-    </div>
+   
     <h2 style="font-family: sans-serif; text-align: center;">Expenses & Income Dashboard</h2>
    
     <div style="display: flex; justify-content: center; gap: 20px; margin-top: 10px;">
@@ -110,9 +111,16 @@
     <div id="pagination" style="display: flex; justify-content: center;">
         
     </div>
+    <div style="display: flex; justify-content: flex-start; margin-top: 10px;">
+      <button type="button" class="btn btn-warning" id="report">Report Generate</button>
+      </div>
    </div>
    <div class="abc" id="showLeaderboard">
+    <div style ="display: flex; justify-content: center; margin-top: 20px;">
+      <h2 style="font-family: sans-serif; text-align: center;">Leaderboard</h2>
+    </div>
     <div id="ul_leader"></div>
+      
    </div>
     </div>
 

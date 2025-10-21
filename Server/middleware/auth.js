@@ -1,12 +1,13 @@
 const User=require("../models/users_details");
 const jwt=require("jsonwebtoken");
+require('dotenv').config();
 
 const authenticate=async(req,res,next)=>{
     try{
         const token=req.header("authorization");
-        console.log(token);
-        const user=jwt.verify(token,"HjglGzkVREwlWX+VFGITENyPO1pAE0pEwYmWScmvg1A=");
-        console.log(user.userId);
+       // console.log(token);
+        const user=jwt.verify(token,`${process.env.TOKEN}`);
+       // console.log(user.userId);
 
         const loginUser=await User.findByPk(user.userId);
         req.user=loginUser;

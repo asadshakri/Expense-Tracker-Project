@@ -32,7 +32,8 @@ const getLeaderboard=async(req,res)=>{
             attributes: [
                 "id",
                 "name",
-                "totalExpense"
+                "totalExpense",
+                "totalIncome"
             ]
         })
     
