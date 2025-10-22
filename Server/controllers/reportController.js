@@ -1,6 +1,7 @@
 const Expense = require("../models/expense_details");
 const User=require("../models/users_details");
 const sequelize = require("../utils/db-connection");
+const AWS=require('aws-sdk');
 require('dotenv').config();
 
 const fs = require("fs");
@@ -10,7 +11,7 @@ const path = require("path");
 const reportGenerate = async (req, res) => {
   try {
     const userId = req.user.id;
-
+     
     //  Get all user expenses
     const allExpenses = await Expense.findAll({
       where: { userId },
@@ -70,7 +71,39 @@ const reportGenerate = async (req, res) => {
     writeSection("WEEKLY EXPENSES", weeklyExpenses);
     writeSection("MONTHLY EXPENSES", monthlyExpenses);
 
-    // Save file locally
+    const filename = `expense_report_${userId}_${Date.now()}.csv`;
+
+    // Upload to S3
+    const BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+    const IAM_USER_KEY = process.env.AWS_ACCESS_KEY;
+    const IAM_USER_SECRET = process.env.AWS_SECRET_KEY;
+
+    let s3Bucket=new AWS.S3({
+      accessKeyId:IAM_USER_KEY,
+      secretAccessKey:IAM_USER_SECRET,
+
+    });
+
+      var params={
+        Bucket:BUCKET_NAME,
+        Key:filename,
+        Body:csvData,
+        ACL:'public-read'
+      };
+      const fileUrl= await new Promise((resolve,reject)=>{
+        s3Bucket.upload(params,(err,res)=>{
+        if(err){
+          console.log('Error in S3 upload:',err);
+          reject(err);
+        }
+        else{
+        console.log('Successfully uploaded report to S3:',res);
+        resolve(res.Location);
+        }
+      });
+    });
+
+   /* // Save file locally
     const reportsDir = path.join(__dirname, "../reports");
     if (!fs.existsSync(reportsDir)) {
       fs.mkdirSync(reportsDir, { recursive: true });
@@ -85,14 +118,13 @@ const reportGenerate = async (req, res) => {
       } else {
         console.log(`Report saved successfully: ${filepath}`);
       }
-    });
+    });*/
 
-    //  Send download URL
-    const fileUrl = `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}/reports/${filename}`;
+
 
     res.status(200).json({
       message: "Report generated successfully!",
-      downloadUrl: fileUrl,
+      downloadUrl: fileUrl
     });
   } catch (err) {
     console.error("Error generating report:", err);

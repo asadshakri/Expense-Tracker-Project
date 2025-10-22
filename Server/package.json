@@ -12,6 +12,7 @@
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.5",
     "@google/genai": "^1.22.0",
+    "aws-sdk": "^2.1692.0",
     "bcrypt": "^6.0.0",
     "cashfree-pg": "^5.0.8",
     "cors": "^2.8.5",

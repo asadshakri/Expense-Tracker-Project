@@ -7,6 +7,7 @@ let allExpenses = [];
 function initialize() {
    
     const token=localStorage.getItem("token");
+    localStorage.setItem("premiumMember",false);
      axios.get("http://localhost:7000/user/premiumMember",{ headers:{ "Authorization": token } })
      .then((response)=>{
         if(response.data.premiumMember===true)
@@ -17,6 +18,7 @@ function initialize() {
             premium.disabled= true;
             const leaderButton=document.getElementById("leaderButton")
             leaderButton.disabled=false;
+            localStorage.setItem("premiumMember",true);
 
         }
      }).catch(err=>console.log(err));
@@ -137,6 +139,7 @@ function logout()
     localStorage.removeItem("email");
     localStorage.removeItem("limit");
     localStorage.removeItem("currentPage");
+    localStorage.removeItem("premiumMember");
     window.location.href="../SignupLogin/main.html"
 }
 
@@ -341,7 +344,11 @@ const reportButton = document.getElementById("report");
 reportButton.addEventListener("click", async(e)=>{
  e.preventDefault();
   const token = localStorage.getItem("token");
-
+  if(localStorage.getItem("premiumMember")!=="true")
+{
+    alert("Only premium members can generate reports. Please upgrade to premium.");
+    return;
+}
   try {
     const res = await axios.get(`http://localhost:7000/reports/generate`, {
       headers: { Authorization: token },
@@ -356,7 +363,7 @@ reportButton.addEventListener("click", async(e)=>{
     }
     else 
     {
-      alert("Error generating report: " + data.message);
+      alert("Error generating report");
     }
   } catch (err) {
     console.error("Error generating report:", err);
