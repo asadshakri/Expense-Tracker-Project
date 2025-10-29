@@ -10,7 +10,7 @@ body{
     margin-top: 50px;
     border: none;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);  /*box-shadow: offset-x offset-y blur-radius spread-radius color;*/
     padding-bottom: 50px;
     background-color: white;
 }
@@ -29,6 +29,6 @@ body{
 }
 
 img {
-    max-width: 100%;   /* don’t exceed the container width */
-    height: auto;      /* keep aspect ratio */
+    max-width: 100%;   /*take full width of container*/
+    height: auto;  
   }

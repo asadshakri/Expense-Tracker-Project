@@ -46,6 +46,21 @@ const getLeaderboard=async(req,res)=>{
     
 }
 
+const FileUrl=require("../models/fileUrl");
+
+const getFileUrls=async(req,res)=>{
+    try{
+        const fileUrls=await FileUrl.findAll({
+            where:{userId:req.user.id}
+        });
+        res.status(200).json(fileUrls);
+    }
+    catch(err){
+        res.status(500).json({message:err.message});
+    }
+}
+
 module.exports={
-    getLeaderboard
+    getLeaderboard,
+    getFileUrls
 }

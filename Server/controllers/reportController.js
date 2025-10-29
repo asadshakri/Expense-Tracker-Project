@@ -7,12 +7,11 @@ require('dotenv').config();
 const fs = require("fs");
 const path = require("path");
 
-// Generate report (daily, weekly, monthly)
 const reportGenerate = async (req, res) => {
   try {
     const userId = req.user.id;
      
-    //  Get all user expenses
+
     const allExpenses = await Expense.findAll({
       where: { userId },
       attributes: ["id", "income", "expenseAmount", "description", "category", "createdAt"],
@@ -23,7 +22,7 @@ const reportGenerate = async (req, res) => {
       return res.status(404).json({ message: "No expenses found for this user." });
     }
 
-    // Helpers
+ 
     const now = new Date();
     const filterByRange = (expenses, start, end) =>
       expenses.filter((e) => {
@@ -31,21 +30,21 @@ const reportGenerate = async (req, res) => {
         return d >= start && d < end;
       });
 
-    // Daily (today)
+  
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const endOfDay = new Date(startOfDay);
     endOfDay.setDate(startOfDay.getDate() + 1);
     const dailyExpenses = filterByRange(allExpenses, startOfDay, endOfDay);
 
-    //Weekly (Sunday → Saturday)
+    
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
-    startOfWeek.setHours(0, 0, 0, 0);
+    startOfWeek.setDate(now.getDate() - now.getDay()); 
+    //startOfWeek.setHours(0, 0, 0, 0);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 7);
     const weeklyExpenses = filterByRange(allExpenses, startOfWeek, endOfWeek);
 
-    // Monthly (1st → next month 1st)
+    
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const monthlyExpenses = filterByRange(allExpenses, startOfMonth, endOfMonth);
@@ -101,6 +100,14 @@ const reportGenerate = async (req, res) => {
         resolve(res.Location);
         }
       });
+    });
+
+
+    // Save file URL to database
+    const FileUrl = require("../models/fileUrl");
+    await FileUrl.create({
+      url: fileUrl,
+      userId: userId
     });
 
    /* // Save file locally

@@ -1,4 +1,4 @@
-const UserUrl="http://localhost:7000/user"
+const backend_url="http://localhost:7000";
 
 function showLogin() {
     document.getElementById("signupForm").style.display = "none";
@@ -52,7 +52,7 @@ function showLogin() {
     const userDetails={email,password};
     const span=document.getElementById("message2");
     span.innerHTML="";
-    axios.post(`${UserUrl}/login`,userDetails).then((response)=>{
+    axios.post(`${backend_url}/user/login`,userDetails).then((response)=>{
       alert(response.data.message);
       localStorage.setItem("token",response.data.token);
       localStorage.setItem("email",email);

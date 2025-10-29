@@ -6,6 +6,8 @@ const mysql=require('mysql2');
 const db=require("./utils/db-connection");
 const fs=require("fs");
 const morgan=require("morgan");
+
+
 const usersRouter=require("./routes/usersRouter");
 const expenseRoute=require('./routes/expenseRouter');
 const paymentRoute=require("./routes/paymentRouter")
@@ -13,12 +15,17 @@ const premiumRouter=require("./routes/premiumRouter");
 const geminiRouter=require("./routes/geminiRouter");
 const passwordRouter=require("./routes/passwordRouter");
 const reportsRouter=require("./routes/reportRouter");
+
+
 const path = require("path");
+
+
 require("./models/expense_details");
 require("./models/ForgotPasswordRequests");
 require("./models/payment");
 require("./models/relation");
 require("./models/users_details");
+require("./models/fileUrl");
 
 const accesslogStream=fs.createWriteStream(path.join(__dirname,'access.log',),{flags:'a'});
 

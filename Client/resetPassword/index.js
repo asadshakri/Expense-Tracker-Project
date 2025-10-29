@@ -1,10 +1,10 @@
-
+const backend_url="http://localhost:7000";
 
 function resetLink(event)
 {
     event.preventDefault();
     const email=event.target.email.value;
-    axios.post("http://localhost:7000/password/forgotPassword",{email})
+    axios.post(`${backend_url}/password/forgotPassword`,{email})
     .then((response)=>{
         alert(response.data.message);
         console.log("reset Link send");

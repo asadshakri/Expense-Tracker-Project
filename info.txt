@@ -1,0 +1,73 @@
+🔹 What bcrypt does
+
+When you hash a password using bcrypt, it:
+
+1.Generates a random salt (a random string added to the password before hashing).
+2.Hashes the salted password using a key derivation function.
+3.Repeats the hashing process 2ⁿ times, where n = saltRounds.
+
+
+🔹 What saltRounds means
+bcrypt.hash(password, saltRounds)
+
+saltRounds is a number, typically between 10 and 12 in most apps.
+It tells bcrypt how many times to process the hashing algorithm internally
+
+
+🔹 Why it matters
+
+Higher salt rounds → more secure, but slower hashing.
+Lower salt rounds → faster, but easier to brute-force if passwords are stolen.
+
+;/
+🔹 What is JWT?
+
+A JWT (JSON Web Token) is a compact, URL-safe string that represents claims (information) between two parties — usually client and server.
+
+🔹 Why we use JWT
+1. ✅ User Authentication
+
+This is the most common use case.
+
+Flow:
+
+User logs in with email/password.
+
+Server verifies credentials and creates a JWT containing user info (like id or role).
+Server sends that JWT back to the client.
+Client stores it (usually in localStorage or a cookie).
+For every next request, the client sends the JWT in the header
+Server verifies the token and allows access — no need to log in again.
+
+2. 🔒 Authorization
+
+Once a user is authenticated, JWT helps control access.
+
+Example:
+
+Token has: { "id": 1, "role": "admin" }
+
+Middleware checks the token.
+
+If role = admin → allow access to admin routes.
+
+
+3. 🔁 Information Exchange
+
+JWTs can securely transmit data between systems — since they are digitally signed, the receiver can verify:
+
+the data wasn’t modified (integrity)
+
+who sent it (authenticity)
+
+
+
+UUID stands for Universally Unique Identifier.
+
+💡 Why use UUID?
+
+Ensures global uniqueness — no two UUIDs will ever clash (practically impossible).
+
+Works without central coordination (unlike auto-incrementing IDs).
+
+Common in databases, APIs, and JWTs for identifying entities securely.

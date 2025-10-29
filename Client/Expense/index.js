@@ -1,14 +1,16 @@
-const apiUrl="http://localhost:7000/expense";
-const paymentUrl="http://localhost:7000/paymentPage";
+const backend_url="http://localhost:7000";
+
 document.addEventListener("DOMContentLoaded", initialize);
 let limit;
 let page;
 let allExpenses = [];
+
+
 function initialize() {
    
     const token=localStorage.getItem("token");
     localStorage.setItem("premiumMember",false);
-     axios.get("http://localhost:7000/user/premiumMember",{ headers:{ "Authorization": token } })
+     axios.get(`${backend_url}/user/premiumMember`,{ headers:{ "Authorization": token } })
      .then((response)=>{
         if(response.data.premiumMember===true)
         {
@@ -49,7 +51,7 @@ function handleSubmit(event){
 
 function add(expenseDetails){
     const token=localStorage.getItem("token");
-    axios.post(`${apiUrl}/add`, expenseDetails,{headers:{ "Authorization": token }})
+    axios.post(`${backend_url}/expense/add`, expenseDetails,{headers:{ "Authorization": token }})
     .then(response => {
       //  allExpenses.push(response.data)
        // display(response.data);
@@ -60,7 +62,7 @@ function display(data) {
   const tbody = document.getElementById("tableBody");
   const tr = document.createElement("tr");
 
-  // Format date (you can adjust format as needed)
+  
   const date = new Date(data.createdAt || Date.now()).toLocaleDateString();
 
   tr.innerHTML = `
@@ -72,14 +74,14 @@ function display(data) {
     <td></td>
   `;
 
-  // Create Delete button
+
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "Delete";
   deleteBtn.style.margin = "5px";
   deleteBtn.classList.add("btn", "btn-danger");
   deleteBtn.addEventListener("click", () => deleteData(data.id, tr));
 
-  // Append delete button in last column
+
   tr.lastElementChild.appendChild(deleteBtn);
 
   tbody.appendChild(tr);
@@ -87,10 +89,12 @@ function display(data) {
 
 }
 
+/***********DELETE EXPENSE  ********************/
+
 function deleteData(id, row) {
   const token = localStorage.getItem("token");
   axios
-    .delete(`${apiUrl}/delete/${id}`, { headers: { Authorization: token } })
+    .delete(`${backend_url}/expense/delete/${id}`, { headers: { Authorization: token } })
     .then((response) => {
       console.log(response.data);
       row.remove();
@@ -102,9 +106,6 @@ function deleteData(id, row) {
         localStorage.setItem("currentPage",page);
         showExpense();
       }
-      
-
-
     })
     .catch((err) => console.error(err));
 }
@@ -112,13 +113,13 @@ function deleteData(id, row) {
 
 function buyPremium() {
     const token = localStorage.getItem("token");
-    const popup = window.open("http://localhost:7000/paymentPage", "payment");
+    const popup = window.open(`${backend_url}/paymentPage`, "payment");
   
     // Listen for "ready" signal from payment page
     window.addEventListener("message", (event) => {
-      if (event.origin === "http://localhost:7000" && event.data === "READY") {
+      if (event.origin === `${backend_url}` && event.data === "READY") {
         // Now payment page is ready, send token
-        popup.postMessage({ token }, "http://localhost:7000");
+        popup.postMessage({ token }, `${backend_url}`);
       }
     });
   }
@@ -130,8 +131,12 @@ function addExpense(){
     expense.style.display="none";
     const Leaderboard=document.getElementById("showLeaderboard");
     Leaderboard.style.display="none";
+    const downloadedFiles=document.getElementById("downloadedFiles");
+    downloadedFiles.style.display="none";
 }
 
+
+/***********CLEAR LOCAL STORAGE ON LOGOUT *******************/
 
 function logout()
 {
@@ -143,6 +148,9 @@ function logout()
     window.location.href="../SignupLogin/main.html"
 }
 
+
+/*****************DISPLAY EXPENSES WITH PAGINATION **************************/
+
 function showExpense(page=localStorage.getItem("currentPage")||1){
   allExpenses = [];
   if(page==0)
@@ -153,7 +161,7 @@ function showExpense(page=localStorage.getItem("currentPage")||1){
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
   const token=localStorage.getItem("token");
-  axios.get(`${apiUrl}/fetch?page=${page}&limit=${limit}`,{ headers:{ "Authorization": token } })
+  axios.get(`${backend_url}/expense/fetch?page=${page}&limit=${limit}`,{ headers:{ "Authorization": token } })
   .then(response => {
       allExpenses=response.data.expenses
       const expenselist = response.data.expenses;
@@ -176,6 +184,7 @@ function showExpense(page=localStorage.getItem("currentPage")||1){
 }
 
 
+/*****************PAGINATION ******************************/
 
 function renderPagination(currentPage, totalPages) {
 
@@ -188,17 +197,22 @@ function renderPagination(currentPage, totalPages) {
   prevBtn.textContent = "« Prev";
   prevBtn.className = "btn btn-outline-dark btn-sm";
   prevBtn.disabled = currentPage === 1;
-  prevBtn.onclick = () => {showExpense(currentPage - 1); localStorage.setItem("currentPage",currentPage - 1)}
+  prevBtn.onclick = () => {
+    showExpense(currentPage - 1);
+     localStorage.setItem("currentPage",currentPage - 1)
+    }
   container.appendChild(prevBtn);
 
-  // 1 2 3
+  // 1 2 3 4 5 6 ... totalPages
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
     btn.className = `btn btn-sm ${
       i === currentPage ? "btn-dark" : "btn-outline-dark"
     }`;
-    btn.onclick = () => {showExpense(i); localStorage.setItem("currentPage",i)}
+    btn.onclick = () => {
+      showExpense(i); 
+      localStorage.setItem("currentPage",i)}
     container.appendChild(btn);
   }
 
@@ -206,7 +220,9 @@ function renderPagination(currentPage, totalPages) {
   nextBtn.textContent = "Next »";
   nextBtn.className = "btn btn-outline-dark btn-sm";
   nextBtn.disabled = currentPage === totalPages;
-  nextBtn.onclick = () => {showExpense(currentPage + 1); localStorage.setItem("currentPage",currentPage + 1)}
+  nextBtn.onclick = () => {
+    showExpense(currentPage + 1);
+     localStorage.setItem("currentPage",currentPage + 1)}
   container.appendChild(nextBtn);
 }
 
@@ -218,23 +234,24 @@ function changeRowsPerPage(value) {
   showExpense(1); // Reload first page with new limit
 }
 
+
+/*****************PREMIUM LEADERBOARD TABLE **************************/
+
 function showLeaderboard(){
     
-    axios.get("http://localhost:7000/premium/getLeaderboard")
+    axios.get(`${backend_url}/premium/getLeaderboard`)
     .then((response) => {
       const leaderboardData = response.data;
 
-      // Get container
       const container = document.getElementById("ul_leader");
-      container.innerHTML = ""; // clear old content
+      container.innerHTML = ""; 
 
-      // Create table
       const table = document.createElement("table");
       table.style.borderCollapse = "collapse";
       table.style.width = "100%";
       table.style.textAlign = "left";
       table.className="table table-striped table-bordered table-hover text-center align-middle mt-3"
-      // Create table header
+
       const thead = document.createElement("thead");
       thead.innerHTML = `
         <tr style="background-color: black; color: white;">
@@ -246,7 +263,7 @@ function showLeaderboard(){
       `;
       table.appendChild(thead);
 
-      // Create table body
+     
       const tbody = document.createElement("tbody");
 
       leaderboardData.forEach((user, index) => {
@@ -273,9 +290,12 @@ function showLeaderboard(){
     expense.style.display="none";
     const Leaderboard=document.getElementById("showLeaderboard");
     Leaderboard.style.display="block";
+    const downloadedFiles=document.getElementById("downloadedFiles");
+    downloadedFiles.style.display="none";
 
 }
 
+/*****************GEMINI AUTO SELECTION OF CATEGORY ********************/
 
 const descriptionid = document.getElementById("description");
 let typingTimer;
@@ -287,7 +307,7 @@ descriptionid.addEventListener("input", () => {
     const description = descriptionid.value.trim();
     if (!description) return;
 
-    axios.post("http://localhost:7000/gemini/suggestCategory", { description })
+    axios.post(`${backend_url}/gemini/suggestCategory`, { description })
       .then(response => {
         const category = document.getElementById("category");
         console.log(response.data.category)
@@ -298,6 +318,7 @@ descriptionid.addEventListener("input", () => {
   }, 1000);
 });
 
+/*************************FILTERING DATA (DAILY,WEEKLU,MONTHLY) ******************/
 
 document.getElementById("daily").addEventListener("click", () => filterData("daily"));
 document.getElementById("weekly").addEventListener("click", () => filterData("weekly"));
@@ -333,12 +354,15 @@ function filterData(type) {
     });
   }
 
-  //Clear and re-render filtered table
+  //Clear and enter filtered table
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = "";
   filtered.forEach((expense) => display(expense));
 }
 
+
+
+/*************************REPORT DOWNLOAD ************************/
 
 const reportButton = document.getElementById("report");
 reportButton.addEventListener("click", async(e)=>{
@@ -350,7 +374,7 @@ reportButton.addEventListener("click", async(e)=>{
     return;
 }
   try {
-    const res = await axios.get(`http://localhost:7000/reports/generate`, {
+    const res = await axios.get(`${backend_url}/reports/generate`, {
       headers: { Authorization: token },
     });
 
@@ -372,4 +396,52 @@ reportButton.addEventListener("click", async(e)=>{
 });
 
 
+
+
+/****************LIST OF DOWNLOADED REPORT **********************/
+function downloadedFiles()
+{
+    const token = localStorage.getItem("token");
+    if(localStorage.getItem("premiumMember")!=="true")
+{
+    alert("Only premium members can access downloaded files. Please upgrade to premium.");
+    return;
+}
+    axios.get(`${backend_url}/premium/downloadedFiles`,{ headers:{ "Authorization": token } })
+    .then((response)=>{
+        const files=response.data
+        const container=document.getElementById("ul_files");
+        container.innerHTML="";
+
+        if(files.length===0)
+        {
+            container.innerHTML="<p>No files downloaded yet.</p>";
+            return;
+        }
+
+        const ul=document.createElement("ul");
+        files.forEach(file=>{
+            const li=document.createElement("li");
+            const a=document.createElement("a");
+            a.href=file.url;
+            a.textContent=`Downloaded on: ${new Date(file.createdAt).toLocaleString()}`;
+            a.target="_blank";
+            li.appendChild(a);
+            ul.appendChild(li);
+        });
+        container.appendChild(ul);
+    })
+    .catch(err=>console.log(err));
+
+
+    const expenseForm=document.getElementById("expenseForm");
+    expenseForm.style.display="none";
+    const expense=document.getElementById("showExpense");
+    expense.style.display="none";
+    const Leaderboard=document.getElementById("showLeaderboard");
+    Leaderboard.style.display="none";
+    const downloadedFiles=document.getElementById("downloadedFiles");
+    downloadedFiles.style.display="block";
+
+}
 
